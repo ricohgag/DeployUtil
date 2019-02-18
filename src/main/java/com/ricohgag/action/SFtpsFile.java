@@ -2,9 +2,11 @@ package com.ricohgag.action;
 
 import com.jcraft.jsch.*;
 import com.ricohgag.util.Log;
+import jdk.internal.util.xml.impl.Input;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 public class SFtpsFile {
@@ -68,6 +70,9 @@ public class SFtpsFile {
             sftp.put(input, filename);
             //设置上传成功
             success = true;
+
+            doShell((ChannelShell) session.openChannel("shell"));
+
         } catch (JSchException e) {
             e.printStackTrace();
         } catch (SftpException e) {
@@ -96,6 +101,41 @@ public class SFtpsFile {
         }
         return path;
     }
+
+    private static void doShell(ChannelShell shell) {
+
+        try {
+            shell.connect();
+
+            InputStream is = shell.getInputStream();
+            PrintWriter pw = new PrintWriter(shell.getOutputStream());
+
+            List<String> cmdList = new ArrayList();
+            cmdList.add("ls\r");
+            cmdList.add("exit\r");
+
+            for(String cmd:cmdList){
+                System.err.println("cmd: "+cmd);
+                pw.println(cmd);
+            }
+
+            pw.flush();
+
+            BufferedReader br = new BufferedReader(new InputStreamReader(is));
+
+            String msg = null;
+            while ((msg=br.readLine())!=null){
+                System.out.println("msg: "+msg);
+            }
+
+        } catch (IOException e){
+            e.printStackTrace();
+        } catch (JSchException e) {
+            e.printStackTrace();
+        }
+
+    }
+
 
     /**
      * 判断目录是否存在

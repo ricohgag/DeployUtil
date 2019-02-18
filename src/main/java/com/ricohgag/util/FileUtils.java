@@ -34,6 +34,7 @@ public class FileUtils {
             while (line != null){
                 System.out.println("每行: "+line);
                 if(line.trim().indexOf("--")!=0){
+                    System.err.println(line);
                     projectStr += line+"\r";
                 }
 

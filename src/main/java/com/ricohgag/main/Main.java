@@ -3,6 +3,7 @@ package com.ricohgag.main;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.ricohgag.action.SFtpsFile;
 import com.ricohgag.pojo.DeployConfig;
 import com.ricohgag.util.FileUtils;
 import com.ricohgag.util.Log;
@@ -17,16 +18,25 @@ public class Main {
     public static void main(String[] args) throws Exception{
 
         String projectStr = FileUtils.getFilePath("D:\\app\\deploy\\project.json");
-        String[] projectUrls = projectStr.split("\r");
+        String[] projectUrls = projectStr.split("\\r");
+        System.out.println("length: "+projectUrls.length);
+
+        DeployConfig config = new DeployConfig("D:\\app\\deploy\\config.json");
+        log.info("测试json: "+config.getAddress());
 
         for(String url:projectUrls){
-            InputStream inputStream = FileUtils.getFileInputStream(url);
 
+            System.err.println("--------------标记---------------");
+            System.err.println("url: "+url);
+            InputStream inputStream = FileUtils.getFileInputStream(url);
+            String fileName = url.substring(url.lastIndexOf("\\")+1);
+            System.out.println("fileName: "+fileName);
+
+            String result = SFtpsFile.newFtpUpload(config.getAddress(), config.getPort(), config.getUsername(),
+                    config.getPassword(), config.getBasepath(), "", "", fileName, inputStream);
         }
 
-        DeployConfig deployConfig = new DeployConfig("D:\\app\\deploy\\config.json");
 
-        log.info("测试json: "+deployConfig.getAddress());
 
     }
 
