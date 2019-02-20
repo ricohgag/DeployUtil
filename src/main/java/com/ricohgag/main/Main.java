@@ -28,23 +28,15 @@ public class Main {
 
             System.err.println("--------------标记---------------");
             System.err.println("url: "+url);
-            InputStream inputStream = FileUtils.getFileInputStream(url);
-            String fileName = url.substring(url.lastIndexOf("\\")+1);
-            System.out.println("fileName: "+fileName);
 
             String result = SFtpsFile.newFtpUpload(config.getAddress(), config.getPort(), config.getUsername(),
-                    config.getPassword(), config.getBasepath(), "", "", fileName, inputStream);
+                    config.getPassword(), config.getBasepath(), "", "", url);
         }
 
 
 
     }
 
-
-
-    private static void upload() {
-
-    }
 
 
 

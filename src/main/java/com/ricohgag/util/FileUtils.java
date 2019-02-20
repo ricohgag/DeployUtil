@@ -51,9 +51,11 @@ public class FileUtils {
 
     public static InputStream getFileInputStream(String url) throws IOException {
         File file = new File(url);
+        System.out.println("待上传文件url: "+url+" 待上传文件大小: "+file.length());
         InputStream inputStream = new FileInputStream(file);
         byte[] bytes = new byte[inputStream.available()];
         inputStream.read(bytes);
+        System.err.println("预估大小: "+inputStream.available());
         return inputStream;
 
     }
